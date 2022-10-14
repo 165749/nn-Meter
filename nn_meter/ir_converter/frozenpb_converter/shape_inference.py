@@ -204,6 +204,8 @@ class ShapeInference:
             The node in Graph IR in dict format.
         """
         in_shape = [graph[node["inbounds"][0]]["attr"]["output_shape"][0]]
+        if "paddings" not in node["attr"]["attr"]:
+            return in_shape, in_shape
         paddings = node["attr"]["attr"]["paddings"]
         out_shape = []
         for dim in range(len(in_shape)):

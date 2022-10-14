@@ -1,0 +1,8 @@
+scikit-learn==0.23.1
+keras==2.6
+tensorflow==2.6.0
+packaging
+networkx
+jsonlines
+pyyaml
+tqdm

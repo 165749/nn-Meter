@@ -53,6 +53,16 @@ class ProtobufHelper:
         node : dict
             A single node in graph IR.
         """
+        weight_name = []
+        weight_op = node["attr"]["name"] + '/ReadVariableOp/resource'
+        if (weight_op in graph.keys() and graph[weight_op]["attr"]["type"] != "Identity"):
+            logging.info(
+                "Find node %s with its weight op %s."
+                % (node["attr"]["name"], weight_op)
+            )
+            weight_name.append(weight_op)
+        return weight_name
+
         NODE_WEIGHT_LUT = {
             "Conv2D": [
                 lambda x: x.replace("/Conv2D", "/weight"),

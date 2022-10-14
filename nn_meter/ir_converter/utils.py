@@ -100,6 +100,9 @@ def model_to_graph(model, model_type, input_shape=(1, 3, 224, 224), apply_nni=Fa
         return nni_model_to_graph(model)
     elif model_type == "nnmeter-ir":
         return model # nnmeter-ir doesn't need any post-process
+    elif model_type == "pb":
+        converter = FrozenPbConverter(model)
+        return converter.get_flatten_graph()
     else:
         raise ValueError(f"Unsupported model type: {model_type}")
 

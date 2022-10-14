@@ -1,11 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
-try:
-    import pkg_resources  # part of setuptools
-    __version__ = pkg_resources.require("nn-meter")[0].version
-except ModuleNotFoundError:
-    __version__ = 'UNKNOWN'
+# try:
+#     import pkg_resources  # part of setuptools
+#     __version__ = pkg_resources.require("nn-meter")[0].version
+# except ModuleNotFoundError:
+#     __version__ = 'UNKNOWN'
 
 from functools import partial, partialmethod
 

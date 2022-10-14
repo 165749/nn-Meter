@@ -10,6 +10,10 @@ logging = logging.getLogger("nn-Meter")
 
 class FrozenPbParser:
     def __init__(self, pb_file):
+        if not isinstance(pb_file, str):
+            self.graph = pb_file
+            return
+
         tf = try_import_tensorflow()
         f = open(pb_file, "rb")
         graph = tf.compat.v1.GraphDef()
@@ -242,11 +246,15 @@ class FrozenPbParser:
         """
 
         for node in self.graph.node:
-            model_graph.node(str(node.name), list(map(str, node.input)))
+            name = str(node.name)
+            inputs = list(map(str, node.input))
+            if name == "NoOp" or "^NoOp" in inputs:
+                continue
+            model_graph.node(name, inputs)
             model_graph.set_node_attr(
                 node.name,
                 {
-                    "name": str(node.name),
+                    "name": name,
                     "type": str(node.op),
                     "output_shape": [], # This will be filled later
                     "attr": self.fetch_attr_to_dict(node),
