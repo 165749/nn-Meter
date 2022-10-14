@@ -73,14 +73,10 @@ def import_from_keras(name, path, image_size=224):
     #                   logdir=path,
     #                   name="frozen_graph.pb",
     #                   as_text=False)
-    # exit(-1)
-    converter = FrozenPbConverter(graph_def)
-    graph = converter.get_flatten_graph()
-    print(graph)
-
-    # tf.saved_model.save(model, "v2_" + path)
-    # tf.compat.v1.saved_model.save(model, path)
-    return model
+    # return model
+    # converter = FrozenPbConverter(graph_def)
+    # graph = converter.get_flatten_graph()
+    # return graph
 
 
 if __name__ == '__main__':
@@ -196,24 +192,12 @@ if __name__ == '__main__':
     # for predictor in list_latency_predictors():
     #     print(predictor)
 
-    # hardware_name = 'cortexA76cpu_tflite21'
-    hardware_name = 'adreno640gpu_tflite21'
-    predictor = load_latency_predictor(hardware_name)  # case insensitive
+    hardware_name = 'cortexA76cpu_tflite21'
+    # hardware_name = 'adreno640gpu_tflite21'
+    predictor = load_latency_predictor(hardware_name)
 
     with open("common.txt", "w") as f:
         for model in models:
             graph = import_from_keras(model, f'model_output/{model}')
             latency = predictor.predict(graph, model_type="pb")
-            f.write(f"{model},{latency}")
-            break
-
-    # model = "mobilenetb_wd2"
-    # graph = import_from_keras(model, f'model_output/{model}')
-
-    # name = 'mobilenetb_wd2'
-    # latency = predictor.predict(graph, model_type="pb")
-
-    # latency = predictor.predict(f'model_output/{name}/frozen_graph.pb', model_type="pb")
-    # latency = predictor.predict(graph, model_type="pb")
-    # latency = predictor.predict(f'model_output/mobilenetv1_0.pb', model_type="pb")
-    # print(latency)
+            f.write(f"{model},{latency}\n")
