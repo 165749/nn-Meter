@@ -15,7 +15,7 @@ class ShapeFetcher:
             The tensorflow input graph_def file.
         """
         self.tf = try_import_tensorflow()
-        self.tf.compat.v1.disable_eager_execution()
+        # self.tf.compat.v1.disable_eager_execution()
 
         graph = self.tf.Graph()
 

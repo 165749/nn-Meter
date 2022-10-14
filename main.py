@@ -5,7 +5,8 @@ from tensorflow.python.framework.convert_to_constants import convert_variables_t
 from nn_meter.ir_converter.frozenpb_converter import FrozenPbConverter
 
 
-def import_from_keras(name, path, image_size=224):
+def import_from_keras(name, image_size=224):
+    tf.keras.backend.clear_session()
     from models.model_provider import get_model
     if name in {
         'mobilenetv3_small_w7d20',
@@ -64,7 +65,7 @@ def import_from_keras(name, path, image_size=224):
     #               metrics=[tf.metrics.SparseCategoricalAccuracy()])
 
     full_model = tf.function(model)
-    full_model = full_model.get_concrete_function(tf.TensorSpec([1, 224, 224, 3], dtype=tf.float32))
+    full_model = full_model.get_concrete_function(tf.TensorSpec([1, image_size, image_size, 3], dtype=tf.float32))
     frozen_func = convert_variables_to_constants_v2(full_model)
     graph_def = frozen_func.graph.as_graph_def()
     return graph_def
@@ -83,8 +84,8 @@ if __name__ == '__main__':
     models = [
         'bagnet9', # New
         'bninception',
-        'darknet_tiny',
-        'darknet19',
+        # 'darknet_tiny',
+        # 'darknet19',
         'densenet121',
         'densenet169',
         'diracnet18v2',
@@ -198,6 +199,6 @@ if __name__ == '__main__':
 
     with open("common.txt", "w") as f:
         for model in models:
-            graph = import_from_keras(model, f'model_output/{model}')
+            graph = import_from_keras(model)
             latency = predictor.predict(graph, model_type="pb")
             f.write(f"{model},{latency}\n")
